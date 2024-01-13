@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Function to create the longest prefix suffix (LPS) array
 void computeLPSArray(const char* pat, int M, int* lps) {
     int len = 0;
     lps[0] = 0;
@@ -24,7 +23,6 @@ void computeLPSArray(const char* pat, int M, int* lps) {
     }
 }
 
-// Modified KMP search algorithm to count pattern occurrences
 void KMPSearch(const char* pat, char* txt, int *matches) {
     int M = strlen(pat);
     int N = strlen(txt);
@@ -80,31 +78,24 @@ int main(int argc, char **argv) {
 
     MPI_File_open(MPI_COMM_WORLD, file_path, MPI_MODE_RDONLY, MPI_INFO_NULL, &fh);
 
-    // Determine the size of the file
     MPI_Offset file_size;
     MPI_File_get_size(fh, &file_size);
-
-    // Calculate the size of the chunk each process will read
+    
     MPI_Offset chunk_size = file_size / world_size;
     MPI_Offset start = world_rank * chunk_size;
     MPI_Offset end = (world_rank == world_size - 1) ? file_size : start + chunk_size;
 
-    // Allocate memory for the local buffer
     char *buffer = (char *)malloc((end - start + 1) * sizeof(char));
 
-    // Read the chunk of the file
     MPI_File_read_at(fh, start, buffer, end - start, MPI_CHAR, &status);
-    buffer[end - start] = '\0'; // Null-terminate the string
+    buffer[end - start] = '\0';
 
-    // Perform KMP search on the buffer
     int num_matches = 0;
     KMPSearch(pattern, buffer, &num_matches);
 
-    // Optionally, gather results at the master process
     int total_matches;
     MPI_Reduce(&num_matches, &total_matches, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
-    // Clean up
     free(buffer);
     MPI_File_close(&fh);
 
