@@ -66,7 +66,7 @@ def test_genome(exec_seq, exec_omp, exec_mpi, file_path, result_path):
     os.chdir("./programs")
 
     #test_genome_sequential(exec_seq, patterns, file_path, result_path)
-    #test_genome_omp(exec_seq, exec_omp, patterns, file_path, result_path)
-    test_genome_mpi(exec_seq, exec_mpi, patterns, file_path, result_path)
+    test_genome_omp(exec_seq, exec_omp, patterns, file_path, result_path)
+    #test_genome_mpi(exec_seq, exec_mpi, patterns, file_path, result_path)
 
     print("Testiranje genoma zavrseno. Rezultati su smesteni na putanji:", result_path)

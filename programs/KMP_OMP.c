@@ -89,6 +89,7 @@ int main(int argc, char** argv) {
     int num_threads = atoi(argv[3]);
     omp_set_num_threads(num_threads);
 
+    double start = omp_get_wtime();
     char* txt = readFile(filename); 
 
     if (txt == NULL) {
@@ -100,11 +101,9 @@ int main(int argc, char** argv) {
     int overlap = strlen(pat) - 1;
     int total_count = 0;
 
-    double start = omp_get_wtime();
     #pragma omp parallel reduction(+:total_count)
     {
         int t = omp_get_thread_num(); 
-        printf("%d \n", t);
         int segment_start = t * segment_size; 
         int segment_end = (t + 1) * segment_size + overlap;
 
